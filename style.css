@@ -1,0 +1,9 @@
+.button {
+    -fx-background-color: #ff5722; /* Оранжевый */
+    -fx-text-fill: white; /* Белый текст */
+    -fx-font-size: 16px;
+    -fx-padding: 10px 20px;
+}
+.button:hover {
+    -fx-background-color: linear-gradient(to bottom, #ffdd44, #ffbb33);
+}
