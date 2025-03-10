@@ -196,7 +196,16 @@ public class Main extends Application {
         }
 
         Platform.runLater(this::createProgressWindow);
-
+        // Создаем папку Maps, если она не существует
+        File mapsFolder = new File(gameDirectory + File.separator + "Maps");
+        if (!mapsFolder.exists()) {
+            boolean created = mapsFolder.mkdirs(); // Создаем директорию
+            if (created) {
+                System.out.println("Папка Maps была создана.");
+            } else {
+                System.out.println("Не удалось создать папку Maps.");
+            }
+        }
         for (int i = 0; i < FILE_URLS.length; i++) {
             final int index = i;
             try {
@@ -239,6 +248,9 @@ public class Main extends Application {
         inputStream.close();
         connection.disconnect();
     }
+
+
+
 
     private long getFileSize(String fileURL) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) new URL(fileURL).openConnection();
