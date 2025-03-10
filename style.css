@@ -3,7 +3,77 @@
     -fx-text-fill: white; /* Белый текст */
     -fx-font-size: 16px;
     -fx-padding: 10px 20px;
+    -fx-border-radius: 15px; /* Закругленные углы */
+    -fx-background-radius: 15px; /* Закругление фона */
 }
+
 .button:hover {
-    -fx-background-color: linear-gradient(to bottom, #ffdd44, #ffbb33);
+    -fx-background-color: #FFBA00; /* Более светлый оттенок оранжевого при наведении */
 }
+
+.button:pressed {
+    -fx-background-color: #FF7043; /* Еще более темный оттенок при нажатии */
+}
+
+.version-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: white; /* Цвет текста */
+    -fx-background-color: rgba(0, 0, 0, 0.5); /* Черный полупрозрачный фон */
+    -fx-padding: 10px;
+    -fx-alignment: bottom-right;
+    -fx-position: absolute;
+    -fx-bottom: 10px;
+    -fx-right: 10px;
+}
+/* Стили для окна загрузки */
+.progress-window {
+    -fx-background-image: url("bg2.png"); /* Путь к изображению */
+    -fx-background-size: cover; /* Заполняет окно, сохраняя пропорции */
+    -fx-background-position: center; /* Центрирует картинку */
+    -fx-background-repeat: no-repeat;
+    -fx-alignment: center; /* Центрирует все элементы внутри VBox */
+    -fx-border-radius: 10px; /* Закругленные углы окна */
+    -fx-padding: 20px; /* Отступы внутри окна */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 0, 2); /* Легкая тень для окна */
+}
+
+/* Стили для текста в окне загрузки */
+.progress-window-label {
+    -fx-alignment: center;
+    -fx-font-size: 24px;
+    -fx-font-style: italic;
+    -fx-opacity: 1;
+    -fx-text-fill: #ffffff; /* Тёмно-серый текст */
+
+}
+
+/* Стили для прогрессбара */
+.progress-bar {
+    -fx-alignment: center;
+    -fx-accent: #FF9E40; /* Оранжевая линия прогресса */
+    -fx-background-color: #dcdcdc; /* Серый фон прогрессбара */
+    -fx-border-radius: 15px; /* Закругленные углы прогрессбара */
+    -fx-pref-height: 33px; /* Высота прогрессбара */
+    -fx-padding: 5px; /* Отступы внутри прогрессбара */
+}
+
+/* Стили для кнопки закрытия окна */
+.progress-close-button {
+    -fx-alignment: center;
+    -fx-background-color: #FF7043; /* Красный цвет для кнопки */
+    -fx-text-fill: white;
+    -fx-font-size: 18 px;
+    -fx-pref-height: 35px; /* Высота кнопки */
+    -fx-pref-width: 180px; /* длина кнопки */
+    -fx-padding: 5px 15px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+}
+
+/* Кнопка закрытия окна при наведении */
+.progress-close-button:hover {
+    -fx-background-color: #FF5722; /* Яркий оранжевый цвет */
+}
+
+
+
