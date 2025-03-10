@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.Properties;
 
 public class Main extends Application {
     private String gameDirectory = ""; // Путь к папке с игрой
@@ -36,6 +36,19 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        // Загружаем сохраненный путь к папке
+        String savedFolder = loadSelectedFolder();
+
+        // Если путь найден, устанавливаем его
+        if (savedFolder != null && !savedFolder.isEmpty()) {
+            gameDirectory = savedFolder;
+            showAlert("Информация", "Последняя выбранная папка: " + gameDirectory);
+        } else {
+            // Если путь не найден, предлагаем выбрать папку вручную
+            showAlert("Информация", "Папка не выбрана. Выберите папку с игрой.");
+            saveSelectedFolder("");
+        }
+
         URL url = Main.class.getClassLoader().getResource("bg.png");
         System.out.println("URL: " + url);
 
@@ -85,18 +98,72 @@ public class Main extends Application {
 
     }
 
+    private void saveSelectedFolder(String path) {
+        Properties properties = new Properties();
+        properties.setProperty("gameDirectory", path); // Сохраняем путь в свойстве
+
+        try (FileOutputStream output = new FileOutputStream("config.properties")) {
+            properties.store(output, null); // Сохраняем в файл config.properties
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Метод для загрузки пути с проверкой существования папки
+    private String loadSelectedFolder() {
+        Properties properties = new Properties();
+        String savedPath = null;
+
+        try (FileInputStream input = new FileInputStream("config.properties")) {
+            properties.load(input);
+            savedPath = properties.getProperty("gameDirectory"); // Читаем сохранённый путь
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Если путь существует и папка найдена, возвращаем его
+        if (savedPath != null && !savedPath.isEmpty()) {
+            File folder = new File(savedPath);
+            if (folder.exists() && folder.isDirectory()) {
+                return savedPath; // Папка существует, возвращаем путь
+            } else {
+                // Если папка не существует, возвращаем null
+                return null;
+            }
+        }
+        return null; // Если путь не найден
+    }
+
+
     private void createProgressWindow() {
         progressStage = new Stage();
+        progressStage.setTitle("Загрузка файлов");
+
+        // Создаем метку для текста
         progressLabel = new Label("Ожидание...");
+        progressLabel.getStyleClass().add("progress-window-label");
+
+        // Создаем прогрессбар
         progressBar = new ProgressBar(0);
+        progressBar.getStyleClass().add("progress-bar");
         progressBar.setPrefWidth(300);
 
-        VBox vbox = new VBox(10, progressLabel, progressBar);
-        Scene scene = new Scene(vbox, 350, 120);
+        // Создаем кнопку для закрытия окна
+        Button closeButton = new Button("Закрыть");
+        closeButton.getStyleClass().add("progress-close-button");
+        closeButton.setOnAction(e -> progressStage.close()); // Закрыть окно при нажатии
+
+        // Оборачиваем все элементы в VBox
+        VBox vbox = new VBox(10, progressLabel, progressBar, closeButton);
+        vbox.getStyleClass().add("progress-window");
+
+        // Устанавливаем сцену и показываем окно
+        Scene scene = new Scene(vbox, 350, 160);
+        scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm()); // Подключаем CSS
         progressStage.setScene(scene);
-        progressStage.setTitle("Загрузка файлов");
         progressStage.show();
     }
+
 
     private void closeProgressWindow() {
         if (progressStage != null) {
@@ -112,10 +179,12 @@ public class Main extends Application {
             File war3Exe = new File(selectedDirectory, "war3.exe");
             if (!war3Exe.exists()) {
                 gameDirectory = ""; // Сбрасываем путь, если war3.exe нет
+                saveSelectedFolder(gameDirectory);
                 showAlert("Ошибка", "В выбранной папке нет war3.exe!");
                 return;
             }
             gameDirectory = selectedDirectory.getAbsolutePath();
+            saveSelectedFolder(gameDirectory);
             showAlert("Успех", "Выбрана папка: " + gameDirectory);
         }
     }
