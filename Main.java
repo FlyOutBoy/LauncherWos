@@ -4,6 +4,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
@@ -54,13 +55,34 @@ public class Main extends Application {
         VBox buttonBox = new VBox(20, selectFolderButton, updateButton);
         buttonBox.setTranslateY(50);
         buttonBox.setTranslateX(0);
+        buttonBox.setStyle("-fx-alignment: center; -fx-spacing: 10;");// Центрируем кнопки по вертикали и горизонтали
+
 
         StackPane root = new StackPane(imageView, buttonBox);
-        Scene scene = new Scene(root, 800, 600);
+        AnchorPane anchorPane = new AnchorPane(); // Новый контейнер для версии
+        anchorPane.getChildren().add(root); // Добавляем основной контейнер в AnchorPane
 
-        primaryStage.setTitle("Лаунчер Warcraft");
+// Создаем лейбл с версией
+        Label versionLabel = new Label("Version 1.0.0");
+
+// Устанавливаем стиль для лейбла
+        versionLabel.getStyleClass().add("version-label");
+
+// Размещаем лейбл в правом нижнем углу
+        AnchorPane.setBottomAnchor(versionLabel, 10.0);
+        AnchorPane.setRightAnchor(versionLabel, 10.0);
+
+// Добавляем лейбл в anchorPane
+        anchorPane.getChildren().add(versionLabel);
+
+        Scene scene = new Scene(anchorPane, 800, 600);
+        scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+
+        primaryStage.setTitle("Загрузчик War of Souls");
         primaryStage.setScene(scene);
+        primaryStage.setResizable(false);  // Окно будет иметь фиксированный размер
         primaryStage.show();
+
     }
 
     private void createProgressWindow() {
@@ -89,6 +111,7 @@ public class Main extends Application {
         if (selectedDirectory != null) {
             File war3Exe = new File(selectedDirectory, "war3.exe");
             if (!war3Exe.exists()) {
+                gameDirectory = ""; // Сбрасываем путь, если war3.exe нет
                 showAlert("Ошибка", "В выбранной папке нет war3.exe!");
                 return;
             }
